@@ -1,0 +1,35 @@
+- name: Install ruby
+  hosts: all
+  tasks:
+    - name: Install ruby
+      apt:
+        name: ruby
+        update_cache: yes
+        state: present
+      become: true
+
+    - name: Install git
+      apt:
+        name: git
+        update_cache: yes
+        state: present
+      become: true
+
+    - name: clone repo
+      git:
+        repo: 'https://github.com/monde/hello.git'
+        dest: /home/ubuntu/hello
+    
+    - name: Install bundler
+      command: gem install bundler -v '1.17.3'
+      become: true
+
+    - name: Kill Gemfile.lock
+      command: rm Gemfile.lock
+      args:
+        chdir: /home/ubuntu/hello
+
+    - name: Bundle install 
+      command: bundle install
+      args:
+        chdir: /home/ubuntu/hello
