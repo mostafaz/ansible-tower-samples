@@ -1,0 +1,18 @@
+- name: Deploy app
+  hosts: all
+  tasks:
+
+    - name: Kill app
+      command:  killall -9 ruby1.9.1
+      ignore_errors: yes
+
+    - name: clone repo
+      git:
+        repo: 'https://github.com/monde/hello.git'
+        dest: /home/ubuntu/hello
+        force: yes
+
+    - name: Start app
+      command: rackup --host 0.0.0.0 -D
+      args:
+        chdir: /home/ubuntu/hello
